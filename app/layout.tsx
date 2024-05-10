@@ -19,17 +19,17 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <head />
         <body className={inter.className}>
-          <div className="pl-2 pt-2">
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="pl-2 pt-2">
               <ModeToggle />
-              {children}
-            </ThemeProvider>
-          </div>
+            </div>
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </>
