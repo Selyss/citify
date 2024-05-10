@@ -1,29 +1,35 @@
 "use-client";
 
-import { Search } from "@/components/search";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { BookForm } from "@/components/book-form";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const citationStyles = z.enum(["mla9", "mla7", "chicago", "apa7"]);
-
-const websiteSchema = z.object({
-  style: citationStyles,
-  query: z.string().url(),
-});
-
-const bookSchema = z.object({
-  style: citationStyles,
-  query: z.string(),
-});
-
-export function WebsiteCitationForm() {
-  const form = useForm<z.infer<typeof websiteSchema>>({
-    resolver: zodResolver(websiteSchema),
-  });
+export function CitationForm() {
   return (
-    <div className="">
-      <Search />
-    </div>
+    <Tabs defaultValue="website" className="w-[400px]">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="website">Website</TabsTrigger>
+        <TabsTrigger value="book">Book</TabsTrigger>
+      </TabsList>
+      <TabsContent value="website">
+        <Card>
+          <CardContent className="space-y-2"></CardContent>
+          <CardFooter>
+            <Button>Generate Citation</Button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+      <TabsContent value="book">
+        <Card>
+          <CardContent className="space-y-2">
+            <BookForm />
+          </CardContent>
+          <CardFooter>
+            <Button>Generate Citation</Button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 }
