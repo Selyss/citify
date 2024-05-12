@@ -1,28 +1,51 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const citationStyles = z.enum(["mla9", "mla7", "chicago", "apa7"]);
 
-const formSchema = z.object({
-  format: z.enum(["website", "book"]),
+const bookSchema = z.object({
   style: citationStyles,
   query: z.string(),
 });
 
+const websiteSchema = z.object({
+  style: citationStyles,
+  query: z.string().url(),
+});
+
 export function CitationForm() {
-  //   const form = useForm<z.infer<typeof formSchema>>({
-  //     resolver: zodResolver(formSchema),
-  //     defaultValues: {
-  //       format: "website",
-  //       style: "mla9",
-  //       query: "",
-  //     },
-  //   });
+  const web_form = useForm<z.infer<typeof websiteSchema>>({
+    resolver: zodResolver(websiteSchema),
+    defaultValues: {
+      style: "mla9",
+      query: "",
+    },
+  });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  function onSubmit(data: z.infer<typeof websiteSchema>) {
+    console.log(data);
   }
-
   return (
     <div className="mx-auto max-w-md space-y-6">
       <div className="space-y-2 text-center">
@@ -38,7 +61,55 @@ export function CitationForm() {
           <TabsTrigger value="website">Website</TabsTrigger>
         </TabsList>
         <TabsContent value="book"></TabsContent>
-        <TabsContent value="website"></TabsContent>
+        <TabsContent value="website">
+          <Form {...web_form}>
+            <form
+              onSubmit={web_form.handleSubmit(onSubmit)}
+              className="space-y-8"
+            >
+              <FormField
+                control={web_form.control}
+                name="style"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Style</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select citation style" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="mla9">MLA 9</SelectItem>
+                        <SelectItem value="mla7">MLA 7</SelectItem>
+                        <SelectItem value="chicago">Chicago</SelectItem>
+                        <SelectItem value="apa7">APA 7</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={web_form.control}
+                name="query"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Query</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter a website" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Generate Citation</Button>
+            </form>
+          </Form>
+        </TabsContent>
       </Tabs>
       <div className="space-y-2 text-center">
         <h2 className="text-2xl font-bold">Citation Preview</h2>
