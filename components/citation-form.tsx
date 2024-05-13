@@ -1,4 +1,5 @@
 "use client";
+import qs from "qs";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -38,6 +40,10 @@ const websiteSchema = z.object({
 const API = "https://api.bibify.org/api";
 
 export function CitationForm() {
+  const [generatedCitation, setGeneratedCitation] = useState<string | null>(
+    null
+  );
+
   const web_form = useForm<z.infer<typeof websiteSchema>>({
     resolver: zodResolver(websiteSchema),
     defaultValues: {
@@ -57,14 +63,18 @@ export function CitationForm() {
 
     // assume mla9 for now
     let citeFields = {
-      style: "mla9",
-      type: "website",
+      style: "modern-language-association.csl",
+      type: "webpage",
+      format: "RFC3986",
     };
 
     resp.then((data) => {
       if (data) {
         let citeObject = { ...data, ...citeFields };
-        console.log(citeObject);
+        fetch(API + `/cite?` + qs.stringify(citeObject))
+          .then((res) => res.json())
+          .then((data) => setGeneratedCitation(data))
+          .catch((err) => console.log(err));
       } else {
         console.log("Error occurred while fetching data.");
       }
@@ -141,12 +151,10 @@ export function CitationForm() {
       </Tabs>
       <div className="space-y-2 text-center">
         <h2 className="text-2xl font-bold">Citation Preview</h2>
-        <div className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800">
-          <p>
-            Author, A. A. (Year).
-            <em>Title of work</em>. Publisher.{"\n              "}
-          </p>
-        </div>
+        <div
+          className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
+          dangerouslySetInnerHTML={{ __html: generatedCitation }}
+        ></div>
       </div>
     </div>
   );
