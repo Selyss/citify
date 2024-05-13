@@ -114,7 +114,7 @@ export function CitationForm() {
           for books or websites.
         </p>
       </div>
-      <Tabs className="w-full" defaultValue="book">
+      <Tabs className="w-full" defaultValue="website">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="book">Book</TabsTrigger>
           <TabsTrigger value="website">Website</TabsTrigger>
@@ -172,16 +172,16 @@ export function CitationForm() {
               </Form>
             </CardContent>
           </Card>
+          <div className="space-y-2 pt-6 text-center">
+            <h2 className="text-2xl font-bold">Citation Preview</h2>
+            <div
+              className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
+              dangerouslySetInnerHTML={{ __html: generatedCitation }}
+            ></div>
+            <Button onClick={copyToClipboard}>Copy to Clipboard</Button>
+          </div>
         </TabsContent>
       </Tabs>
-      <div className="space-y-2 text-center">
-        <h2 className="text-2xl font-bold">Citation Preview</h2>
-        <div
-          className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
-          dangerouslySetInnerHTML={{ __html: generatedCitation }}
-        ></div>
-        <Button onClick={copyToClipboard}>Copy to Clipboard</Button>
-      </div>
     </div>
   );
 }
