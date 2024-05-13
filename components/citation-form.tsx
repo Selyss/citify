@@ -40,12 +40,12 @@ const websiteSchema = z.object({
 
 const API = "https://api.bibify.org/api";
 
+// FIXME: change console logs to toasts
+
 export function CitationForm() {
   const { toast } = useToast();
 
-  const [generatedCitation, setGeneratedCitation] = useState<string | null>(
-    null
-  );
+  const [generatedCitation, setGeneratedCitation] = useState<any>(null);
 
   const web_form = useForm<z.infer<typeof websiteSchema>>({
     resolver: zodResolver(websiteSchema),
@@ -96,7 +96,6 @@ export function CitationForm() {
     resp.then((data) => {
       if (data) {
         let citeObject = { ...data, ...citeFields };
-        console.log(citeObject);
         fetch(API + `/cite?` + qs.stringify(citeObject))
           .then((res) => res.json())
           .then((data) => setGeneratedCitation(data))
@@ -179,7 +178,6 @@ export function CitationForm() {
         <h2 className="text-2xl font-bold">Citation Preview</h2>
         <div
           className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
-          id="rich-citation"
           dangerouslySetInnerHTML={{ __html: generatedCitation }}
         ></div>
         <Button onClick={copyToClipboard}>Copy to Clipboard</Button>
