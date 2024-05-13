@@ -52,6 +52,15 @@ export function CitationForm() {
     },
   });
 
+  function copyToClipboard() {
+    if (generatedCitation) {
+      navigator.clipboard
+        .writeText(generatedCitation)
+        .then(() => alert("Citation copied to clipboard"))
+        .catch((error) => console.error("Failed to copy citation: ", error));
+    }
+  }
+
   function onSubmit(data: z.infer<typeof websiteSchema>) {
     let resp = fetch(API + `/website?url=${data.query}`)
       .then((res) => res.json())
@@ -71,6 +80,7 @@ export function CitationForm() {
     resp.then((data) => {
       if (data) {
         let citeObject = { ...data, ...citeFields };
+        console.log(citeObject);
         fetch(API + `/cite?` + qs.stringify(citeObject))
           .then((res) => res.json())
           .then((data) => setGeneratedCitation(data))
@@ -155,6 +165,7 @@ export function CitationForm() {
           className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
           dangerouslySetInnerHTML={{ __html: generatedCitation }}
         ></div>
+        <Button onClick={copyToClipboard}>Copy to Clipboard</Button>
       </div>
     </div>
   );
