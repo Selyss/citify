@@ -51,6 +51,14 @@ export function CitationForm() {
       .then((res) => res.json())
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
+
+    switch (data.style) {
+      case "mla9":
+        break;
+
+      default:
+        break;
+    }
   }
   return (
     <div className="mx-auto max-w-md space-y-6">
@@ -123,7 +131,12 @@ export function CitationForm() {
       </Tabs>
       <div className="space-y-2 text-center">
         <h2 className="text-2xl font-bold">Citation Preview</h2>
-        <div className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"></div>
+        <div className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800">
+          <p>
+            Author, A. A. (Year).
+            <em>Title of work</em>. Publisher.{"\n              "}
+          </p>
+        </div>
       </div>
     </div>
   );
