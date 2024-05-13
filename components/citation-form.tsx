@@ -55,10 +55,18 @@ export function CitationForm() {
     },
   });
 
+  async function copyRichText(citation: string) {
+    if (typeof ClipboardItem !== "undefined") {
+      const html = new Blob([citation], { type: "text/html" });
+      // TODO: add plain text fallback
+      const data = new ClipboardItem({ "text/html": html });
+      await navigator.clipboard.write([data]);
+    }
+  }
+
   function copyToClipboard() {
     if (generatedCitation) {
-      navigator.clipboard
-        .writeText(generatedCitation)
+      copyRichText(generatedCitation)
         .then(() => toast({ title: "Citation copied to clipboard" }))
         .catch((error) =>
           toast({
@@ -171,6 +179,7 @@ export function CitationForm() {
         <h2 className="text-2xl font-bold">Citation Preview</h2>
         <div
           className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
+          id="rich-citation"
           dangerouslySetInnerHTML={{ __html: generatedCitation }}
         ></div>
         <Button onClick={copyToClipboard}>Copy to Clipboard</Button>
