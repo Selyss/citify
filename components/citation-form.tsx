@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +41,8 @@ const websiteSchema = z.object({
 const API = "https://api.bibify.org/api";
 
 export function CitationForm() {
+  const { toast } = useToast();
+
   const [generatedCitation, setGeneratedCitation] = useState<string | null>(
     null
   );
@@ -56,8 +59,13 @@ export function CitationForm() {
     if (generatedCitation) {
       navigator.clipboard
         .writeText(generatedCitation)
-        .then(() => alert("Citation copied to clipboard"))
-        .catch((error) => console.error("Failed to copy citation: ", error));
+        .then(() => toast({ title: "Citation copied to clipboard" }))
+        .catch((error) =>
+          toast({
+            title: `Failed to copy citation: ${error}`,
+            variant: "destructive",
+          })
+        );
     }
   }
 
