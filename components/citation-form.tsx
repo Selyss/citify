@@ -1,4 +1,5 @@
 "use client";
+
 import qs from "qs";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,6 +48,12 @@ export function CitationForm() {
   const { toast } = useToast();
 
   const [generatedCitation, setGeneratedCitation] = useState<any>(null);
+
+  const [isTextArea, setIsTextArea] = useState(false);
+
+  const toggleInputType = () => {
+    setIsTextArea(!isTextArea);
+  };
 
   const web_form = useForm<z.infer<typeof websiteSchema>>({
     resolver: zodResolver(websiteSchema),
@@ -123,6 +131,7 @@ export function CitationForm() {
         <TabsContent value="website">
           <Card className="pt-4">
             <CardContent>
+              <Switch checked={isTextArea} onCheckedChange={toggleInputType} />
               <Form {...web_form}>
                 <form
                   onSubmit={web_form.handleSubmit(onSubmit)}
@@ -172,6 +181,7 @@ export function CitationForm() {
               </Form>
             </CardContent>
           </Card>
+          {isTextArea ? <p>t</p> : <p>i</p>}
           <div className="space-y-2 pt-6 text-center">
             <h2 className="text-2xl font-bold">Citation Preview</h2>
             <div
