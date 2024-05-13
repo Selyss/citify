@@ -47,18 +47,28 @@ export function CitationForm() {
   });
 
   function onSubmit(data: z.infer<typeof websiteSchema>) {
-    fetch(API + `/website?url=${data.query}`)
+    let resp = fetch(API + `/website?url=${data.query}`)
       .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then((responseData) => responseData)
+      .catch((err) => {
+        console.log(err);
+        return null;
+      });
 
-    switch (data.style) {
-      case "mla9":
-        break;
+    // assume mla9 for now
+    let citeFields = {
+      style: "mla9",
+      type: "website",
+    };
 
-      default:
-        break;
-    }
+    resp.then((data) => {
+      if (data) {
+        let citeObject = { ...data, ...citeFields };
+        console.log(citeObject);
+      } else {
+        console.log("Error occurred while fetching data.");
+      }
+    });
   }
   return (
     <div className="mx-auto max-w-md space-y-6">
