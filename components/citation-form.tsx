@@ -106,7 +106,10 @@ export function CitationForm() {
           fetch(API + `/cite?` + qs.stringify(citeObject))
             .then((res) => res.json())
             .then((data) => {
-              citations.push(data);
+              setGeneratedCitations((prevCitations: any) => [
+                ...prevCitations,
+                data,
+              ]);
             })
             .catch((err) => console.log(err));
         } else {
