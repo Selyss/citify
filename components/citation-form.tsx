@@ -133,7 +133,6 @@ export function CitationForm() {
         <TabsContent value="website">
           <Card className="pt-4">
             <CardContent>
-              <Switch checked={isTextArea} onCheckedChange={toggleInputType} />
               <Form {...web_form}>
                 <form
                   onSubmit={web_form.handleSubmit(onSubmit)}
@@ -179,6 +178,7 @@ export function CitationForm() {
                               <div className="grid w-full gap-1.5">
                                 <Textarea
                                   placeholder="Enter a website"
+                                  {...field}
                                   id="message"
                                 />
                               </div>
@@ -186,6 +186,10 @@ export function CitationForm() {
                           )}
                         </FormControl>
                         <FormMessage />
+                        <Switch
+                          checked={isTextArea}
+                          onCheckedChange={toggleInputType}
+                        />
                       </FormItem>
                     )}
                   />
