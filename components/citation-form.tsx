@@ -165,7 +165,6 @@ export function CitationForm() {
                 name="query"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Query</FormLabel>
                     <FormControl>
                       <div className="grid w-full">
                         <div className="grid w-full gap-1.5">
@@ -182,7 +181,9 @@ export function CitationForm() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Generate Citation</Button>
+              <Button className="w-full" type="submit">
+                Generate Citation
+              </Button>
             </form>
           </Form>
         </CardContent>
