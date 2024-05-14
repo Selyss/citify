@@ -24,7 +24,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { Key, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -47,7 +47,7 @@ const API = "https://api.bibify.org/api";
 export function CitationForm() {
   const { toast } = useToast();
 
-  const [generatedCitation, setGeneratedCitation] = useState<any>(null);
+  const [generatedCitations, setGeneratedCitations] = useState<any>(null);
 
   const web_form = useForm<z.infer<typeof websiteSchema>>({
     resolver: zodResolver(websiteSchema),
@@ -67,8 +67,8 @@ export function CitationForm() {
   }
 
   function copyToClipboard() {
-    if (generatedCitation) {
-      copyRichText(generatedCitation)
+    if (generatedCitations) {
+      copyRichText(generatedCitations)
         .then(() => toast({ title: "Citation copied to clipboard" }))
         .catch((error) =>
           toast({
@@ -79,32 +79,41 @@ export function CitationForm() {
     }
   }
 
-  function onSubmit(data: z.infer<typeof websiteSchema>) {
-    let resp = fetch(API + `/website?url=${data.query}`)
-      .then((res) => res.json())
-      .then((responseData) => responseData)
-      .catch((err) => {
-        console.log(err);
-        return null;
-      });
+  async function onSubmit(data: z.infer<typeof websiteSchema>) {
+    const links = data.query.split("\n").filter((link) => link.trim() !== "");
 
-    // assume mla9 for now
-    let citeFields = {
-      style: "modern-language-association.csl",
-      type: "webpage",
-      format: "RFC3986",
-    };
+    // Promise.all to do api calls in parallel
+    const apiCalls = links.map((link) => {
+      return fetch(API + `/website?url=${encodeURIComponent(link)}`)
+        .then((res) => res.json())
+        .catch((err) => {
+          console.log(`Error occurred while fetching data for ${link}: ${err}`);
+          return null;
+        });
+    });
 
-    resp.then((data) => {
-      if (data) {
-        let citeObject = { ...data, ...citeFields };
-        fetch(API + `/cite?` + qs.stringify(citeObject))
-          .then((res) => res.json())
-          .then((data) => setGeneratedCitation(data))
-          .catch((err) => console.log(err));
-      } else {
-        console.log("Error occurred while fetching data.");
+    Promise.all(apiCalls).then((responses) => {
+      const citations: string[] = [];
+      for (const response of responses) {
+        if (response) {
+          const citeFields = {
+            style: "modern-language-association.csl",
+            type: "webpage",
+            format: "RFC3986",
+          };
+          const citeObject = { ...response, ...citeFields };
+          // should citations maintain order they are entered? :FIXME
+          fetch(API + `/cite?` + qs.stringify(citeObject))
+            .then((res) => res.json())
+            .then((data) => {
+              citations.push(data);
+            })
+            .catch((err) => console.log(err));
+        } else {
+          console.log("Error occurred while fetching data.");
+        }
       }
+      setGeneratedCitations(citations);
     });
   }
   return (
@@ -185,10 +194,18 @@ export function CitationForm() {
           </Card>
           <div className="space-y-2 pt-6 text-center">
             <h2 className="text-2xl font-bold">Citation Preview</h2>
-            <div
-              className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
-              dangerouslySetInnerHTML={{ __html: generatedCitation }}
-            ></div>
+            <div className="space-y-4">
+              {generatedCitations &&
+                generatedCitations.map(
+                  (citation: string, index: Key | null | undefined) => (
+                    <div
+                      className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
+                      key={index}
+                      dangerouslySetInnerHTML={{ __html: citation }}
+                    />
+                  )
+                )}
+            </div>
             <Button onClick={copyToClipboard}>Copy to Clipboard</Button>
           </div>
         </TabsContent>
