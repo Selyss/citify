@@ -2,6 +2,8 @@
 
 import qs from "qs";
 
+import { Textarea } from "@/components/ui/textarea";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -170,7 +172,18 @@ export function CitationForm() {
                       <FormItem>
                         <FormLabel>Query</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter a website" {...field} />
+                          {isTextArea ? (
+                            <Input placeholder="Enter a website" {...field} />
+                          ) : (
+                            <div className="grid w-full">
+                              <div className="grid w-full gap-1.5">
+                                <Textarea
+                                  placeholder="Enter a website"
+                                  id="message"
+                                />
+                              </div>
+                            </div>
+                          )}
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -181,7 +194,6 @@ export function CitationForm() {
               </Form>
             </CardContent>
           </Card>
-          {isTextArea ? <p>t</p> : <p>i</p>}
           <div className="space-y-2 pt-6 text-center">
             <h2 className="text-2xl font-bold">Citation Preview</h2>
             <div
