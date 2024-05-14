@@ -14,7 +14,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -22,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -50,12 +48,6 @@ export function CitationForm() {
   const { toast } = useToast();
 
   const [generatedCitation, setGeneratedCitation] = useState<any>(null);
-
-  const [isTextArea, setIsTextArea] = useState(false);
-
-  const toggleInputType = () => {
-    setIsTextArea(!isTextArea);
-  };
 
   const web_form = useForm<z.infer<typeof websiteSchema>>({
     resolver: zodResolver(websiteSchema),
@@ -171,25 +163,18 @@ export function CitationForm() {
                       <FormItem>
                         <FormLabel>Query</FormLabel>
                         <FormControl>
-                          {isTextArea ? (
-                            <Input placeholder="Enter a website" {...field} />
-                          ) : (
-                            <div className="grid w-full">
-                              <div className="grid w-full gap-1.5">
-                                <Textarea
-                                  placeholder="Enter a website"
-                                  {...field}
-                                  id="message"
-                                />
-                              </div>
+                          <div className="grid w-full">
+                            <div className="grid w-full gap-1.5">
+                              <Textarea
+                                placeholder="Enter a website"
+                                {...field}
+                                id="message"
+                                rows={4}
+                              />
                             </div>
-                          )}
+                          </div>
                         </FormControl>
                         <FormMessage />
-                        <Switch
-                          checked={isTextArea}
-                          onCheckedChange={toggleInputType}
-                        />
                       </FormItem>
                     )}
                   />
