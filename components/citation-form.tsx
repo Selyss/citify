@@ -120,7 +120,7 @@ export function CitationForm() {
     });
   }
   return (
-    <div className="mx-auto max-w-md space-y-6">
+    <div className="mx-auto max-w-lg space-y-6">
       <div className="space-y-2 text-center">
         <h1 className="text-3xl font-bold">Citation Generator</h1>
         <p className="text-gray-500 dark:text-gray-400">
