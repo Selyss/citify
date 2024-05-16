@@ -188,7 +188,9 @@ export function CitationForm() {
                   className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
                   key={index}
                   // HACK: dangerouslysetinnerhtml
-                  dangerouslySetInnerHTML={{ __html: citation }}
+                  dangerouslySetInnerHTML={{
+                    __html: citation,
+                  }}
                 />
               )
             )}
