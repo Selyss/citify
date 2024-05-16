@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Key, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CopyButton } from "./copy-button";
@@ -157,17 +157,22 @@ export function CitationForm() {
       <div className="space-y-2 pt-6 text-center">
         <h2 className="text-2xl font-bold">Citation Preview</h2>
         <div className="space-y-4">
+          {/* better way to do this? */}
           {generatedCitations &&
-            generatedCitations.map(
-              (citation: string, index: Key | null | undefined) => (
-                <div key={index}>
-                  <CopyButton value={citation} />
-                  <div className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800">
-                    <div dangerouslySetInnerHTML={{ __html: citation }} />
-                  </div>
+            generatedCitations.map((citation: any, index: any) => (
+              <div
+                className="relative rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
+                key={index}
+              >
+                <CopyButton
+                  className="absolute top-2 right-2"
+                  value={citation}
+                />
+                <div className="p-2">
+                  <div dangerouslySetInnerHTML={{ __html: citation }} />
                 </div>
-              )
-            )}
+              </div>
+            ))}
         </div>
       </div>
     </div>

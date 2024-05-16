@@ -1,7 +1,7 @@
 "use-client";
 
 import { useToast } from "@/components/ui/use-toast";
-import { CheckIcon, ClipboardCopyIcon } from "@radix-ui/react-icons";
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -61,9 +61,9 @@ export function CopyButton({
     >
       <span className="sr-only">Copy</span>
       {hasCopied ? (
-        <CheckIcon className="h-3 w-3" />
+        <CheckIcon className="h-4 w-4" />
       ) : (
-        <ClipboardCopyIcon className="h-3 w-3" />
+        <CopyIcon className="h-4 w-4" />
       )}
     </Button>
   );
