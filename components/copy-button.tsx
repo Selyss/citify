@@ -23,20 +23,11 @@ export function CopyButton({
   const [hasCopied, setHasCopied] = React.useState(false);
   const { toast } = useToast();
   async function copyToClipboard(citation: string) {
-    try {
-      if (typeof ClipboardItem !== "undefined") {
-        const html = new Blob([citation], { type: "text/html" });
-        // TODO: add plain text fallback
-        const data = new ClipboardItem({ "text/html": html });
-        await navigator.clipboard.write([data]);
-      }
-
-      toast({ title: "Citation copied to clipboard" });
-    } catch (error) {
-      toast({
-        title: `Failed to copy citation: ${error}`,
-        variant: "destructive",
-      });
+    if (typeof ClipboardItem !== "undefined") {
+      const html = new Blob([citation], { type: "text/html" });
+      // TODO: add plain text fallback
+      const data = new ClipboardItem({ "text/html": html });
+      await navigator.clipboard.write([data]);
     }
   }
 

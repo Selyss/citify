@@ -113,67 +113,72 @@ export function CitationForm() {
     });
   }
   return (
-    <div className="mx-auto max-w-lg space-y-6">
-      <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Citation Generator</h1>
-        <p className="text-gray-500 dark:text-gray-400">
-          Generate properly formatted citations in APA, MLA, or Chicago style
-          for websites.
-        </p>
-      </div>
-      <Form {...web_form}>
-        <form onSubmit={web_form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={web_form.control}
-            name="style"
-            render={({ field }) => (
-              <FormItem>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+    <>
+      <div className="mx-auto max-w-md space-y-6">
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold">Citation Generator</h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Generate properly formatted citations in APA, MLA, or Chicago style
+            for websites.
+          </p>
+        </div>
+        <Form {...web_form}>
+          <form
+            onSubmit={web_form.handleSubmit(onSubmit)}
+            className="space-y-4"
+          >
+            <FormField
+              control={web_form.control}
+              name="style"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select citation style" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="mla">MLA</SelectItem>
+                      <SelectItem value="chicago">Chicago</SelectItem>
+                      <SelectItem value="apa">APA</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={web_form.control}
+              name="query"
+              render={({ field }) => (
+                <FormItem>
                   <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select citation style" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="mla">MLA</SelectItem>
-                    <SelectItem value="chicago">Chicago</SelectItem>
-                    <SelectItem value="apa">APA</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={web_form.control}
-            name="query"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <div className="grid w-full">
-                    <div className="grid w-full gap-1.5">
-                      <Textarea
-                        placeholder="Enter a website"
-                        {...field}
-                        id="message"
-                        rows={4}
-                      />
+                    <div className="grid w-full">
+                      <div className="grid w-full gap-1.5">
+                        <Textarea
+                          placeholder="Enter a website"
+                          {...field}
+                          id="message"
+                          rows={4}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button className="w-full" type="submit">
-            Generate Citation
-          </Button>
-        </form>
-      </Form>
-      <div className="space-y-2 pt-6 text-center">
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button className="w-full" type="submit">
+              Generate Citation
+            </Button>
+          </form>
+        </Form>
+      </div>
+      <div className="space-y-2 pt-6 text-center max-w-2xl">
         <h2 className="text-2xl font-bold">Citation List</h2>
         <div className="space-y-4">
           {/* better way to do this? */}
@@ -194,6 +199,6 @@ export function CitationForm() {
             ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }
