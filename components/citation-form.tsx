@@ -174,7 +174,7 @@ export function CitationForm() {
         </form>
       </Form>
       <div className="space-y-2 pt-6 text-center">
-        <h2 className="text-2xl font-bold">Citation Preview</h2>
+        <h2 className="text-2xl font-bold">Citation List</h2>
         <div className="space-y-4">
           {/* better way to do this? */}
           {generatedCitations &&
