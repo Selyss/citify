@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { CopyButton } from "./copy-button";
 
 const citationStyles = z.enum(["mla9", "mla7", "chicago", "apa7"]);
 
@@ -40,10 +41,26 @@ const websiteSchema = z.object({
 const API = "https://api.bibify.org/api";
 
 // FIXME: change console logs to toasts
+export async function CopyToClipboard(citation: string) {
+  const { toast } = useToast();
+  try {
+    if (typeof ClipboardItem !== "undefined") {
+      const html = new Blob([citation], { type: "text/html" });
+      // TODO: add plain text fallback
+      const data = new ClipboardItem({ "text/html": html });
+      await navigator.clipboard.write([data]);
+    }
+
+    toast({ title: "Citation copied to clipboard" });
+  } catch (error) {
+    toast({
+      title: `Failed to copy citation: ${error}`,
+      variant: "destructive",
+    });
+  }
+}
 
 export function CitationForm() {
-  const { toast } = useToast();
-
   const [generatedCitations, setGeneratedCitations] = useState<any>(null);
 
   const web_form = useForm<z.infer<typeof websiteSchema>>({
@@ -53,24 +70,6 @@ export function CitationForm() {
       query: "",
     },
   });
-
-  async function copyToClipboard(citation: string) {
-    try {
-      if (typeof ClipboardItem !== "undefined") {
-        const html = new Blob([citation], { type: "text/html" });
-        // TODO: add plain text fallback
-        const data = new ClipboardItem({ "text/html": html });
-        await navigator.clipboard.write([data]);
-      }
-
-      toast({ title: "Citation copied to clipboard" });
-    } catch (error) {
-      toast({
-        title: `Failed to copy citation: ${error}`,
-        variant: "destructive",
-      });
-    }
-  }
 
   async function onSubmit(data: z.infer<typeof websiteSchema>) {
     const links = data.query.split("\n").filter((link) => link.trim() !== "");
@@ -183,12 +182,7 @@ export function CitationForm() {
                 className="relative rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
                 key={index}
               >
-                <button
-                  className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded-md text-sm"
-                  onClick={() => copyToClipboard(citation)}
-                >
-                  Copy
-                </button>
+                <CopyButton value={citation}></CopyButton>
                 {<div dangerouslySetInnerHTML={{ __html: citation }} />}
               </div>
             ))}

@@ -5,6 +5,7 @@ import * as React from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { CopyToClipboard } from "./citation-form";
 
 // https://github.com/shadcn-ui/ui/blob/13d9693808badd4b92811abac5e18dc1cddf2384/apps/www/components/copy-button.tsx
 
@@ -35,7 +36,7 @@ export function CopyButton({
         className
       )}
       onClick={() => {
-        console.log("copied");
+        CopyToClipboard(value);
         setHasCopied(true);
       }}
       {...props}
