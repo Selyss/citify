@@ -4,6 +4,7 @@ import qs from "qs";
 
 import { Textarea } from "@/components/ui/textarea";
 
+import { CopyButton } from "@/components/copy-button";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,11 +20,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CopyButton } from "./copy-button";
 
 const citationStyles = z.enum(["mla", "chicago", "apa"]);
 
@@ -33,8 +34,6 @@ const websiteSchema = z.object({
 });
 
 const API = "https://api.bibify.org/api";
-
-// FIXME: change console logs to toasts
 
 function getCitationPath(style: string): string {
   switch (style) {
@@ -48,6 +47,8 @@ function getCitationPath(style: string): string {
 }
 
 export function CitationForm() {
+  const { toast } = useToast();
+
   const [generatedCitations, setGeneratedCitations] = useState<any>(null);
 
   const web_form = useForm<z.infer<typeof websiteSchema>>({
@@ -66,7 +67,11 @@ export function CitationForm() {
       return fetch(API + `/website?url=${encodeURIComponent(link)}`)
         .then((res) => res.json())
         .catch((err) => {
-          console.log(`Error occurred while fetching data for ${link}: ${err}`);
+          toast({
+            title: `Error fetching data from ${link}.`,
+            description: `${err}`,
+            variant: "destructive",
+          });
           return null;
         });
     });
@@ -90,9 +95,18 @@ export function CitationForm() {
                 data,
               ]);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+              toast({
+                title: `Error occurred while fetching data.`,
+                description: `${err}`,
+                variant: "destructive",
+              });
+            });
         } else {
-          console.log("Error occurred while fetching data.");
+          toast({
+            title: `Error occurred while fetching data.`,
+            variant: "destructive",
+          });
         }
       }
       setGeneratedCitations(citations);
