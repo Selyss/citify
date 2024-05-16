@@ -25,12 +25,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CopyButton } from "./copy-button";
 
-const citationStyles = z.enum(["mla9", "mla7", "chicago", "apa7"]);
-
-const bookSchema = z.object({
-  style: citationStyles,
-  query: z.string(),
-});
+const citationStyles = z.enum(["mla", "chicago", "apa"]);
 
 const websiteSchema = z.object({
   style: citationStyles,
@@ -41,13 +36,24 @@ const API = "https://api.bibify.org/api";
 
 // FIXME: change console logs to toasts
 
+function getCitationPath(style: string): string {
+  switch (style) {
+    case "apa":
+      return "apa.csl";
+    case "chicago":
+      return "chicago-fullnote-bibliography.csl";
+    default:
+      return "modern-language-association.csl";
+  }
+}
+
 export function CitationForm() {
   const [generatedCitations, setGeneratedCitations] = useState<any>(null);
 
   const web_form = useForm<z.infer<typeof websiteSchema>>({
     resolver: zodResolver(websiteSchema),
     defaultValues: {
-      style: "mla9",
+      style: "mla",
       query: "",
     },
   });
@@ -70,7 +76,7 @@ export function CitationForm() {
       for (const response of responses) {
         if (response) {
           const citeFields = {
-            style: "modern-language-association.csl",
+            style: getCitationPath(data.style),
             type: "webpage",
             format: "RFC3986",
           };
@@ -118,10 +124,9 @@ export function CitationForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="mla9">MLA 9</SelectItem>
-                    <SelectItem value="mla7">MLA 7</SelectItem>
+                    <SelectItem value="mla">MLA</SelectItem>
                     <SelectItem value="chicago">Chicago</SelectItem>
-                    <SelectItem value="apa7">APA 7</SelectItem>
+                    <SelectItem value="apa">APA</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
