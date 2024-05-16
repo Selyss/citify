@@ -41,26 +41,9 @@ const websiteSchema = z.object({
 const API = "https://api.bibify.org/api";
 
 // FIXME: change console logs to toasts
-export async function CopyToClipboard(citation: string) {
-  const { toast } = useToast();
-  try {
-    if (typeof ClipboardItem !== "undefined") {
-      const html = new Blob([citation], { type: "text/html" });
-      // TODO: add plain text fallback
-      const data = new ClipboardItem({ "text/html": html });
-      await navigator.clipboard.write([data]);
-    }
-
-    toast({ title: "Citation copied to clipboard" });
-  } catch (error) {
-    toast({
-      title: `Failed to copy citation: ${error}`,
-      variant: "destructive",
-    });
-  }
-}
 
 export function CitationForm() {
+  const { toast } = useToast();
   const [generatedCitations, setGeneratedCitations] = useState<any>(null);
 
   const web_form = useForm<z.infer<typeof websiteSchema>>({
@@ -70,6 +53,23 @@ export function CitationForm() {
       query: "",
     },
   });
+  async function copyToClipboard(citation: string) {
+    try {
+      if (typeof ClipboardItem !== "undefined") {
+        const html = new Blob([citation], { type: "text/html" });
+        // TODO: add plain text fallback
+        const data = new ClipboardItem({ "text/html": html });
+        await navigator.clipboard.write([data]);
+      }
+
+      toast({ title: "Citation copied to clipboard" });
+    } catch (error) {
+      toast({
+        title: `Failed to copy citation: ${error}`,
+        variant: "destructive",
+      });
+    }
+  }
 
   async function onSubmit(data: z.infer<typeof websiteSchema>) {
     const links = data.query.split("\n").filter((link) => link.trim() !== "");

@@ -1,11 +1,11 @@
 "use-client";
 
+import { useToast } from "@/components/ui/use-toast";
 import { CheckIcon, ClipboardCopyIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CopyToClipboard } from "./citation-form";
 
 // https://github.com/shadcn-ui/ui/blob/13d9693808badd4b92811abac5e18dc1cddf2384/apps/www/components/copy-button.tsx
 
@@ -21,6 +21,24 @@ export function CopyButton({
   ...props
 }: CopyButtonProps) {
   const [hasCopied, setHasCopied] = React.useState(false);
+  const { toast } = useToast();
+  async function copyToClipboard(citation: string) {
+    try {
+      if (typeof ClipboardItem !== "undefined") {
+        const html = new Blob([citation], { type: "text/html" });
+        // TODO: add plain text fallback
+        const data = new ClipboardItem({ "text/html": html });
+        await navigator.clipboard.write([data]);
+      }
+
+      toast({ title: "Citation copied to clipboard" });
+    } catch (error) {
+      toast({
+        title: `Failed to copy citation: ${error}`,
+        variant: "destructive",
+      });
+    }
+  }
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -36,7 +54,7 @@ export function CopyButton({
         className
       )}
       onClick={() => {
-        CopyToClipboard(value);
+        copyToClipboard(value);
         setHasCopied(true);
       }}
       {...props}
