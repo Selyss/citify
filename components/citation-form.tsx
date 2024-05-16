@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Key, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -63,16 +63,15 @@ export function CitationForm() {
     }
   }
 
-  function copyToClipboard() {
-    if (generatedCitations) {
-      copyRichText(generatedCitations)
-        .then(() => toast({ title: "Citation copied to clipboard" }))
-        .catch((error) =>
-          toast({
-            title: `Failed to copy citation: ${error}`,
-            variant: "destructive",
-          })
-        );
+  async function copyToClipboard(citation: string) {
+    try {
+      await navigator.clipboard.writeText(citation);
+      toast({ title: "Citation copied to clipboard" });
+    } catch (error) {
+      toast({
+        title: `Failed to copy citation: ${error}`,
+        variant: "destructive",
+      });
     }
   }
 
@@ -182,18 +181,20 @@ export function CitationForm() {
         <h2 className="text-2xl font-bold">Citation Preview</h2>
         <div className="space-y-4">
           {generatedCitations &&
-            generatedCitations.map(
-              (citation: string, index: Key | null | undefined) => (
-                <div
-                  className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
-                  key={index}
-                  // HACK: dangerouslysetinnerhtml
-                  dangerouslySetInnerHTML={{
-                    __html: citation,
-                  }}
-                />
-              )
-            )}
+            generatedCitations.map((citation: any, index: any) => (
+              <div
+                className="relative rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
+                key={index}
+              >
+                <button
+                  className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded-md text-sm"
+                  onClick={() => copyToClipboard(citation)}
+                >
+                  Copy
+                </button>
+                {<div dangerouslySetInnerHTML={{ __html: citation }} />}
+              </div>
+            ))}
         </div>
       </div>
     </div>
