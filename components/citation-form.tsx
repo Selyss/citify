@@ -4,7 +4,6 @@ import qs from "qs";
 
 import { Textarea } from "@/components/ui/textarea";
 
-import { CopyButton } from "@/components/copy-button";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -188,12 +187,12 @@ export function CitationForm() {
                 <div
                   className="rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
                   key={index}
+                  // HACK: dangerouslysetinnerhtml
                   dangerouslySetInnerHTML={{ __html: citation }}
                 />
               )
             )}
         </div>
-        <CopyButton></CopyButton>
       </div>
     </div>
   );
