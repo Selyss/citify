@@ -54,18 +54,15 @@ export function CitationForm() {
     },
   });
 
-  async function copyRichText(citation: string) {
-    if (typeof ClipboardItem !== "undefined") {
-      const html = new Blob([citation], { type: "text/html" });
-      // TODO: add plain text fallback
-      const data = new ClipboardItem({ "text/html": html });
-      await navigator.clipboard.write([data]);
-    }
-  }
-
   async function copyToClipboard(citation: string) {
     try {
-      await navigator.clipboard.writeText(citation);
+      if (typeof ClipboardItem !== "undefined") {
+        const html = new Blob([citation], { type: "text/html" });
+        // TODO: add plain text fallback
+        const data = new ClipboardItem({ "text/html": html });
+        await navigator.clipboard.write([data]);
+      }
+
       toast({ title: "Citation copied to clipboard" });
     } catch (error) {
       toast({
