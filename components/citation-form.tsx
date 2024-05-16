@@ -4,14 +4,13 @@ import qs from "qs";
 
 import { Textarea } from "@/components/ui/textarea";
 
+import { CopyButton } from "@/components/copy-button";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
@@ -127,67 +126,59 @@ export function CitationForm() {
           for websites.
         </p>
       </div>
-      <Card className="pt-4">
-        <CardContent>
-          <Form {...web_form}>
-            <form
-              onSubmit={web_form.handleSubmit(onSubmit)}
-              className="space-y-4"
-            >
-              <FormField
-                control={web_form.control}
-                name="style"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Style</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select citation style" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="mla9">MLA 9</SelectItem>
-                        <SelectItem value="mla7">MLA 7</SelectItem>
-                        <SelectItem value="chicago">Chicago</SelectItem>
-                        <SelectItem value="apa7">APA 7</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={web_form.control}
-                name="query"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div className="grid w-full">
-                        <div className="grid w-full gap-1.5">
-                          <Textarea
-                            placeholder="Enter a website"
-                            {...field}
-                            id="message"
-                            rows={4}
-                          />
-                        </div>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button className="w-full" type="submit">
-                Generate Citation
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+      <Form {...web_form}>
+        <form onSubmit={web_form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={web_form.control}
+            name="style"
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select citation style" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="mla9">MLA 9</SelectItem>
+                    <SelectItem value="mla7">MLA 7</SelectItem>
+                    <SelectItem value="chicago">Chicago</SelectItem>
+                    <SelectItem value="apa7">APA 7</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={web_form.control}
+            name="query"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="grid w-full">
+                    <div className="grid w-full gap-1.5">
+                      <Textarea
+                        placeholder="Enter a website"
+                        {...field}
+                        id="message"
+                        rows={4}
+                      />
+                    </div>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button className="w-full" type="submit">
+            Generate Citation
+          </Button>
+        </form>
+      </Form>
       <div className="space-y-2 pt-6 text-center">
         <h2 className="text-2xl font-bold">Citation Preview</h2>
         <div className="space-y-4">
@@ -202,7 +193,7 @@ export function CitationForm() {
               )
             )}
         </div>
-        <Button onClick={copyToClipboard}>Copy to Clipboard</Button>
+        <CopyButton></CopyButton>
       </div>
     </div>
   );
