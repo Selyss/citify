@@ -117,7 +117,7 @@ export function CitationForm() {
       <div className="mx-auto max-w-md space-y-6">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Citation Generator</h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-muted-foreground">
             Generate properly formatted citations in APA, MLA, or Chicago style
             for websites.
           </p>
@@ -185,7 +185,7 @@ export function CitationForm() {
           {generatedCitations &&
             generatedCitations.map((citation: any, index: any) => (
               <div
-                className="relative rounded-lg border bg-gray-50 p-4 text-left dark:bg-gray-900 dark:border-gray-800"
+                className="relative rounded-lg border bg-zinc-300 p-4 text-left dark:bg-zinc-900"
                 key={index}
               >
                 <CopyButton
