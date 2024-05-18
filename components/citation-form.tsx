@@ -13,6 +13,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -180,24 +181,26 @@ export function CitationForm() {
       </div>
       <div className="space-y-2 pt-6 text-center max-w-2xl">
         <h2 className="text-2xl font-bold">Citation List</h2>
-        <div className="space-y-4">
-          {/* better way to do this? */}
-          {generatedCitations &&
-            generatedCitations.map((citation: any, index: any) => (
-              <div
-                className="relative rounded-lg border bg-zinc-300 p-4 text-left dark:bg-zinc-900"
-                key={index}
-              >
-                <CopyButton
-                  className="absolute top-2 right-2"
-                  value={citation}
-                />
-                <div className="p-2">
-                  <div dangerouslySetInnerHTML={{ __html: citation }} />
+        <ScrollArea className="h-[300px] p-4" type="always">
+          <div className="space-y-4">
+            {/* better way to do this? */}
+            {generatedCitations &&
+              generatedCitations.map((citation: any, index: any) => (
+                <div
+                  className="relative rounded-lg border bg-zinc-300 p-4 text-left dark:bg-zinc-900"
+                  key={index}
+                >
+                  <CopyButton
+                    className="absolute top-2 right-2"
+                    value={citation}
+                  />
+                  <div className="p-2">
+                    <div dangerouslySetInnerHTML={{ __html: citation }} />
+                  </div>
                 </div>
-              </div>
-            ))}
-        </div>
+              ))}
+          </div>
+        </ScrollArea>
       </div>
     </>
   );
